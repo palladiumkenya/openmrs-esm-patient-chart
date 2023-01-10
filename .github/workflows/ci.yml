@@ -77,16 +77,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -94,9 +96,8 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
-
   deploy_generic_patient_widgets_app:
     runs-on: ubuntu-latest
 
@@ -119,16 +120,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -136,9 +139,8 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
-
   deploy_patient_allergies_app:
     runs-on: ubuntu-latest
 
@@ -161,16 +163,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -178,9 +182,8 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
-
   deploy_patient_appointments_app:
     runs-on: ubuntu-latest
 
@@ -203,16 +206,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -220,7 +225,7 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
   deploy_patient_attachments_app:
@@ -245,16 +250,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -262,9 +269,8 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
-
   deploy_patient_banner_app:
     runs-on: ubuntu-latest
 
@@ -287,16 +293,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -304,9 +312,8 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
-
   deploy_patient_biometrics_app:
     runs-on: ubuntu-latest
 
@@ -329,16 +336,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+     # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -346,9 +355,8 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
-
   deploy_patient_chart_app:
     runs-on: ubuntu-latest
 
@@ -371,16 +379,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -388,9 +398,8 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
-
   deploy_patient_conditions_app:
     runs-on: ubuntu-latest
 
@@ -413,16 +422,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+     # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -430,7 +441,7 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
   deploy_patient_forms_app:
@@ -455,16 +466,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+     # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -472,7 +485,7 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
   deploy_patient_immunizations_app:
@@ -497,16 +510,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -514,7 +529,7 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
   deploy_patient_medications_app:
@@ -539,16 +554,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -556,7 +573,7 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
   deploy_patient_notes_app:
@@ -581,16 +598,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -598,7 +617,7 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
   deploy_patient_programs_app:
@@ -623,16 +642,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+     # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -640,7 +661,7 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
   deploy_patient_test_results_app:
@@ -665,16 +686,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -682,7 +705,7 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
   deploy_patient_vitals_app:
@@ -707,16 +730,18 @@ jobs:
         run: |
           mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
           mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
-      - name: Publish to Digital Ocean
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --cache-control "max-age=31536000"
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
-          SOURCE_DIR: "dist"
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
       - name: Update Importmap
         uses: fjogeleit/http-request-action@master
         with:
@@ -724,5 +749,5 @@ jobs:
           method: "PATCH"
           username: ${{ secrets.DEPLOYER_USERNAME }}
           password: ${{ secrets.DEPLOYER_PASSWORD }}
-          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://donaldkibet.fra1.digitaloceanspaces.com/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
           customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
