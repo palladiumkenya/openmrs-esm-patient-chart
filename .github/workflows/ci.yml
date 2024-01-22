@@ -1,4 +1,4 @@
-name: OpenMRS CI
+name: KenyaEMR CI
 
 on:
   push:
@@ -9,153 +9,745 @@ on:
     types:
       - created
 
-env:
-  TURBO_API: 'http://127.0.0.1:9080'
-  TURBO_TOKEN: ${{ secrets.TURBO_SERVER_TOKEN }}
-  TURBO_TEAM: ${{ github.repository_owner }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     permissions:
       actions: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
-
+          node-version: '16'
+      
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-
+      
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --immutable
-
+      
       - name: Setup a local cache server for Turborepo
-        uses: felixmosh/turborepo-gh-artifacts@v2
+        uses: felixmosh/turborepo-gh-artifacts@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          server-token: ${{ env.TURBO_TOKEN }}
-
-      - name: Run lint, type checks and tests
-        run: yarn verify
-
+          server-token: ${{ secrets.TURBO_SERVER_TOKEN }}
+      
+      - name: Run tests
+        run: yarn run test
+      
+      - name: Run lint and typecheck
+        run: yarn turbo run lint typescript --color --api="http://127.0.0.1:9080" --token="${{ secrets.TURBO_SERVER_TOKEN }}" --team="${{ github.repository_owner }}"
+      
       - name: Run build
-        run: yarn turbo build --color --concurrency=5
-
-  pre_release:
-    runs-on: ubuntu-latest
-
-    needs: build
-
-    if: ${{ github.event_name == 'push' }}
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Cache dependencies
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install --immutable
-
-      - name: Setup local cache server for Turborepo
-        uses: felixmosh/turborepo-gh-artifacts@v2
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          server-token: ${{ env.TURBO_TOKEN }}
-
-      - name: Version
-        run: yarn lerna version "$(node -e "console.log(require('semver').inc(require('./lerna.json').version, 'patch'))")-pre.${{ github.run_number }}" --no-git-tag-version --no-push --yes
-
-      - name: Build
-        run: yarn turbo build --color --concurrency=5
-
-      - run: git config user.email "info@openmrs.org" && git config user.name "OpenMRS CI"
-      - run: git add . && git commit -m "Prerelease version" --no-verify
-
-      - name: Pre-release
-        run: yarn run ci:prepublish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
+        run: yarn turbo run build --color --concurrency=5 --api="http://127.0.0.1:9080" --token="${{ secrets.TURBO_SERVER_TOKEN }}" --team="${{ github.repository_owner }}"
+      
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: packages
           path: |
             packages/**/dist
 
-  deploy_patient_chart:
+  deploy_form_entry_app:
     runs-on: ubuntu-latest
 
-    needs: pre_release
+    env:
+      DIR_NAME: "esm-form-entry-app"
+      ESM_NAME: "@openmrs/esm-form-entry-app"
+      JS_NAME: "openmrs-esm-form-entry-app.js"
+
+    needs: build
 
     if: ${{ github.event_name == 'push' }}
 
     steps:
-      - name: Trigger RefApp Build
-        uses: fjogeleit/http-request-action@master
-        continue-on-error: true
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
         with:
-          url: https://ci.openmrs.org/rest/api/latest/queue/REFAPP-D3X
-          method: 'POST'
-          customHeaders: '{ "Authorization": "Bearer ${{ secrets.BAMBOO_TOKEN }}" }'
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
 
-  release:
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+  deploy_generic_patient_widgets_app:
     runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-generic-patient-widgets-app"
+      ESM_NAME: "@openmrs/esm-generic-patient-widgets-app"
+      JS_NAME: "openmrs-esm-generic-patient-widgets-app.js"
 
     needs: build
 
-    if: ${{ github.event_name == 'release' }}
+    if: ${{ github.event_name == 'push' }}
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Cache dependencies
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install --immutable
-
-      - name: Setup local cache server for Turborepo
-        uses: felixmosh/turborepo-gh-artifacts@v2
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          server-token: ${{ env.TURBO_TOKEN }}
-
-      - name: Build
-        run: yarn turbo build --color --concurrency=5
-
-      - name: Publish
-        run: yarn run ci:publish
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+  deploy_patient_allergies_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-allergies-app"
+      ESM_NAME: "@openmrs/esm-patient-allergies-app"
+      JS_NAME: "openmrs-esm-patient-allergies-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+  deploy_patient_appointments_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-appointments-app"
+      ESM_NAME: "@openmrs/esm-patient-appointments-app"
+      JS_NAME: "openmrs-esm-patient-appointments-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+
+  deploy_patient_attachments_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-attachments-app"
+      ESM_NAME: "@openmrs/esm-patient-attachments-app"
+      JS_NAME: "openmrs-esm-patient-attachments-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+  deploy_patient_banner_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-banner-app"
+      ESM_NAME: "@openmrs/esm-patient-banner-app"
+      JS_NAME: "openmrs-esm-patient-banner-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+  deploy_patient_biometrics_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-biometrics-app"
+      ESM_NAME: "@openmrs/esm-patient-biometrics-app"
+      JS_NAME: "openmrs-esm-patient-biometrics-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+     # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+  deploy_patient_chart_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-chart-app"
+      ESM_NAME: "@openmrs/esm-patient-chart-app"
+      JS_NAME: "openmrs-esm-patient-chart-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+  deploy_patient_conditions_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-conditions-app"
+      ESM_NAME: "@openmrs/esm-patient-conditions-app"
+      JS_NAME: "openmrs-esm-patient-conditions-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+     # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+
+  deploy_patient_forms_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-forms-app"
+      ESM_NAME: "@openmrs/esm-patient-forms-app"
+      JS_NAME: "openmrs-esm-patient-forms-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+     # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+
+  deploy_patient_immunizations_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-immunizations-app"
+      ESM_NAME: "@openmrs/esm-patient-immunizations-app"
+      JS_NAME: "openmrs-esm-patient-immunizations-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+
+  deploy_patient_medications_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-medications-app"
+      ESM_NAME: "@openmrs/esm-patient-medications-app"
+      JS_NAME: "openmrs-esm-patient-medications-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+
+  deploy_patient_notes_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-notes-app"
+      ESM_NAME: "@openmrs/esm-patient-notes-app"
+      JS_NAME: "openmrs-esm-patient-notes-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+
+  deploy_patient_programs_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-programs-app"
+      ESM_NAME: "@openmrs/esm-patient-programs-app"
+      JS_NAME: "openmrs-esm-patient-programs-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+     # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+
+  deploy_patient_test_results_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-test-results-app"
+      ESM_NAME: "@openmrs/esm-patient-test-results-app"
+      JS_NAME: "openmrs-esm-patient-test-results-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+
+  deploy_patient_vitals_app:
+    runs-on: ubuntu-latest
+
+    env:
+      DIR_NAME: "esm-patient-vitals-app"
+      ESM_NAME: "@openmrs/esm-patient-vitals-app"
+      JS_NAME: "openmrs-esm-patient-vitals-app.js"
+
+    needs: build
+
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+      - name: Compute Timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Prepare Directory
+        shell: bash
+        run: |
+          mkdir -p dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}
+          mv packages/${{ env.DIR_NAME }}/dist/*.* dist/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/
+      # deploying to Data
+      - name: deploy-to-server
+        uses: Pendect/action-rsyncer@v2.0.0
+        env:
+          DEPLOY_KEY: ${{secrets.KEY}}
+        with:
+          flags: "-avzr --update"
+          options: ""
+          ssh_options: "-p ${{secrets.PORT}}"
+          src: "dist"
+          dest: "${{secrets.USER}}@${{secrets.HOST}}:/var/www/openmrs"
+
+      - name: Update Importmap
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: http://${{ secrets.DEPLOYER_HOST }}/services?env=prod
+          method: "PATCH"
+          username: ${{ secrets.DEPLOYER_USERNAME }}
+          password: ${{ secrets.DEPLOYER_PASSWORD }}
+          data: '{ "service":"${{ env.ESM_NAME }}","url":"https://deployer.kenyahmis.org/${{ env.ESM_NAME }}/${{ env.TIMESTAMP }}_${{ github.sha }}/${{ env.JS_NAME }}" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
