@@ -15,7 +15,7 @@ import vitalsHeaderComponent from './vitals-and-biometrics-header/vitals-header.
 import biometricsOverviewComponent from './biometrics/biometrics-overview.component';
 import biometricsDetailedSummaryComponent from './biometrics/biometrics-main.component';
 
-const moduleName = '@openmrs/esm-patient-vitals-app';
+const moduleName = '@kenyaemr/esm-patient-vitals-app';
 
 const options = {
   featureName: 'patient-vitals',

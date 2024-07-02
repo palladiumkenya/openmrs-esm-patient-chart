@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-patient-notes-app",
+  "name": "@kenyaemr/esm-patient-notes-app",
   "version": "8.0.1",
   "license": "MPL-2.0",
   "description": "Patient notes microfrontend for the OpenMRS SPA",
-  "browser": "dist/openmrs-esm-patient-notes-app.js",
+  "browser": "dist/kenyaemr-esm-patient-notes-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

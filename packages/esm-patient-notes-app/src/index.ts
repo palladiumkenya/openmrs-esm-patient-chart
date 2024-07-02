@@ -9,7 +9,7 @@ import { configSchema } from './config-schema';
 import notesOverviewExtension from './notes/notes-overview.extension';
 import visitNotesActionButtonExtension from './visit-note-action-button.extension';
 
-const moduleName = '@openmrs/esm-patient-notes-app';
+const moduleName = '@kenyaemr/esm-patient-notes-app';
 
 const options = {
   featureName: 'patient-notes',

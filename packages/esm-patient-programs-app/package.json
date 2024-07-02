@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-patient-programs-app",
+  "name": "@kenyaemr/esm-patient-programs-app",
   "version": "8.0.1",
   "license": "MPL-2.0",
   "description": "Patient programs microfrontend for the OpenMRS SPA",
-  "browser": "dist/openmrs-esm-patient-programs-app.js",
+  "browser": "dist/kenyaemr-esm-patient-programs-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

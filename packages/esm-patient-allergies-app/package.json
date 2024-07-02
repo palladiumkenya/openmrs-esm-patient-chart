@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-patient-allergies-app",
+  "name": "@kenyaemr/esm-patient-allergies-app",
   "version": "8.0.1",
   "license": "MPL-2.0",
   "description": "Patient allergies microfrontend for the OpenMRS SPA",
-  "browser": "dist/openmrs-esm-patient-allergies-app.js",
+  "browser": "dist/kenyaemr-esm-patient-allergies-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

@@ -3,7 +3,7 @@ import { configSchema } from './config-schema';
 
 import patientListsActionButtonComponent from './action-button/patient-lists-action-button.extension';
 
-const moduleName = '@openmrs/esm-patient-lists-app';
+const moduleName = '@kenyaemr/esm-patient-lists-app';
 const options = {
   featureName: 'patient-lists',
   moduleName,

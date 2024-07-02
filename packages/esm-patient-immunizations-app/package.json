@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-patient-immunizations-app",
+  "name": "@kenyaemr/esm-patient-immunizations-app",
   "version": "8.0.1",
   "license": "MPL-2.0",
   "description": "Patient immunizations microfrontend for the OpenMRS SPA",
-  "browser": "dist/openmrs-esm-patient-immunizations-app.js",
+  "browser": "dist/kenyaemr-esm-patient-immunizations-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

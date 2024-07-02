@@ -12,7 +12,7 @@ import clinicalFormActionMenuComponent from './clinical-form-action-button.compo
 import offlineFormOverviewCardComponent from './offline-forms/offline-forms-overview-card.component';
 import offlineFormsComponent from './offline-forms/offline-forms.component';
 
-const moduleName = '@openmrs/esm-patient-forms-app';
+const moduleName = '@kenyaemr/esm-patient-forms-app';
 
 const options = {
   featureName: 'patient-forms',

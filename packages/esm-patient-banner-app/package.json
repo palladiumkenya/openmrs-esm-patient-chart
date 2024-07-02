@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-patient-banner-app",
+  "name": "@kenyaemr/esm-patient-banner-app",
   "version": "8.0.1",
   "license": "MPL-2.0",
   "description": "Patient banner microfrontend for the OpenMRS SPA",
-  "browser": "dist/openmrs-esm-patient-banner-app.js",
+  "browser": "dist/kenyaemr-esm-patient-banner-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

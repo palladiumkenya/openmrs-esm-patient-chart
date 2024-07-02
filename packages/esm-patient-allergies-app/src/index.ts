@@ -13,7 +13,7 @@ import { dashboardMeta } from './dashboard.meta';
 import allergiesDetailedSummaryComponent from './allergies/allergies-detailed-summary.component';
 import allergyTileComponent from './allergies/allergies-tile.component';
 
-const moduleName = '@openmrs/esm-patient-allergies-app';
+const moduleName = '@kenyaemr/esm-patient-allergies-app';
 
 const options = {
   featureName: 'patient-allergies',

@@ -5,7 +5,7 @@ import { dashboardMeta } from './dashboard.meta';
 import immunizationsOverviewComponent from './immunizations/immunizations-overview.component';
 import immunizationsDetailedSummaryComponent from './immunizations/immunizations-detailed-summary.component';
 
-const moduleName = '@openmrs/esm-patient-immunizations-app';
+const moduleName = '@kenyaemr/esm-patient-immunizations-app';
 
 const options = {
   featureName: 'patient-immunizations',

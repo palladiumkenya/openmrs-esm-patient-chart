@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-patient-orders-app",
+  "name": "@kenyaemr/esm-patient-orders-app",
   "version": "8.0.1",
   "license": "MPL-2.0",
   "description": "Microfrontend for the OpenMRS SPA providing the order basket for the patient chart",
-  "browser": "dist/openmrs-esm-patient-orders-app.js",
+  "browser": "dist/kenyaemr-esm-patient-orders-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

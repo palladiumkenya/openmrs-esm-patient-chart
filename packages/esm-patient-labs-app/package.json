@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-patient-labs-app",
+  "name": "@9kenyaemr/esm-patient-labs-app",
   "version": "8.0.1",
   "license": "MPL-2.0",
   "description": "Patient lab order and test results microfrontend for the OpenMRS SPA",
-  "browser": "dist/openmrs-esm-patient-labs-app.js",
+  "browser": "dist/kenyaemr-esm-patient-labs-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

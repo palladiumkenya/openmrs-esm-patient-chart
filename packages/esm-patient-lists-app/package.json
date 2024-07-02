@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-patient-lists-app",
+  "name": "@kenyaemr/esm-patient-lists-app",
   "version": "8.0.1",
   "license": "MPL-2.0",
   "description": "An OpenMRS frontend module for managing patient lists in the Patient Chart",
-  "browser": "dist/openmrs-esm-patient-lists-app.js",
+  "browser": "dist/kenyaemr-esm-patient-lists-app.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {

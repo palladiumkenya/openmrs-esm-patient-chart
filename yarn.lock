@@ -5,6 +5,29 @@ __metadata:
   version: 8
   cacheKey: 10
 
+"@9kenyaemr/esm-patient-labs-app@workspace:packages/esm-patient-labs-app":
+  version: 0.0.0-use.local
+  resolution: "@9kenyaemr/esm-patient-labs-app@workspace:packages/esm-patient-labs-app"
+  dependencies:
+    "@carbon/charts": "npm:^1.5.2"
+    "@carbon/charts-react": "npm:^1.5.2"
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    d3: "npm:^7.6.1"
+    fuzzy: "npm:^0.1.3"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
 "@aashutoshrathi/word-wrap@npm:^1.2.3":
   version: 1.2.6
   resolution: "@aashutoshrathi/word-wrap@npm:1.2.6"
@@ -3780,6 +3803,383 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kenyaemr/esm-form-engine-app@workspace:packages/esm-form-engine-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-form-engine-app@workspace:packages/esm-form-engine-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    "@openmrs/openmrs-form-engine-lib": "npm:next"
+    lodash-es: "npm:^4.17.21"
+    react-error-boundary: "npm:^4.0.13"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-form-entry-app@workspace:packages/esm-form-entry-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-form-entry-app@workspace:packages/esm-form-entry-app"
+  dependencies:
+    "@angular-devkit/build-angular": "npm:^16.2.11"
+    "@angular-eslint/builder": "npm:^16.3.1"
+    "@angular-eslint/eslint-plugin": "npm:^16.3.1"
+    "@angular-eslint/eslint-plugin-template": "npm:^16.3.1"
+    "@angular-eslint/schematics": "npm:^16.3.1"
+    "@angular-eslint/template-parser": "npm:^16.3.1"
+    "@angular-extensions/elements": "npm:^16.0.0"
+    "@angular/animations": "npm:^16.2.12"
+    "@angular/cdk": "npm:^16.2.12"
+    "@angular/cli": "npm:^16.2.11"
+    "@angular/common": "npm:^16.2.12"
+    "@angular/compiler": "npm:^16.2.12"
+    "@angular/compiler-cli": "npm:^16.2.12"
+    "@angular/core": "npm:^16.2.12"
+    "@angular/forms": "npm:^16.2.12"
+    "@angular/language-service": "npm:^16.2.12"
+    "@angular/localize": "npm:^16.2.12"
+    "@angular/platform-browser": "npm:^16.2.12"
+    "@angular/platform-browser-dynamic": "npm:^16.2.12"
+    "@angular/router": "npm:^16.2.12"
+    "@carbon/styles": "npm:~1.14.0"
+    "@ng-select/ng-select": "npm:^11.2.0"
+    "@ngx-translate/core": "npm:^15.0.0"
+    "@openmrs/esm-framework": "npm:next"
+    "@openmrs/ngx-file-uploader": "npm:next"
+    "@openmrs/ngx-formentry": "npm:next"
+    "@types/jasmine": "npm:~3.6.11"
+    "@types/jasminewd2": "npm:~2.0.3"
+    "@types/webpack-env": "npm:^1.18.2"
+    "@typescript-eslint/eslint-plugin": "npm:5.48.2"
+    "@typescript-eslint/parser": "npm:5.48.2"
+    codelyzer: "npm:^6.0.2"
+    copy-webpack-plugin: "npm:^11.0.0"
+    eslint: "npm:^8.33.0"
+    jasmine-core: "npm:~5.1.1"
+    jasmine-spec-reporter: "npm:~7.0.0"
+    jspdf: "npm:^2.5.1"
+    karma: "npm:~6.4.2"
+    karma-chrome-launcher: "npm:~3.2.0"
+    karma-coverage-istanbul-reporter: "npm:~3.0.3"
+    karma-jasmine: "npm:~5.1.0"
+    karma-jasmine-html-reporter: "npm:^2.1.0"
+    moment: "npm:^2.29.4"
+    ngx-bootstrap: "npm:^11.0.1"
+    ngx-build-plus: "npm:^16.0.0"
+    ngx-webcam: "npm:^0.4.1"
+    openmrs: "npm:next"
+    protractor: "npm:~7.0.0"
+    reflect-metadata: "npm:^0.1.13"
+    rxjs: "npm:^7.8.0"
+    single-spa-angular: "npm:^9.0.1"
+    slick-carousel: "npm:^1.8.1"
+    style-loader: "npm:2.x"
+    systemjs-webpack-interop: "npm:^2.3.7"
+    tree-model: "npm:^1.0.7"
+    tslib: "npm:^2.4.1"
+    uuid: "npm:^8.3.2"
+    webpack: "npm:~5.89.0"
+    zone.js: "npm:~0.13.3"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    single-spa: 6.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-generic-patient-widgets-app@workspace:packages/esm-generic-patient-widgets-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-generic-patient-widgets-app@workspace:packages/esm-generic-patient-widgets-app"
+  dependencies:
+    "@carbon/charts-react": "npm:^1.5.2"
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    d3: "npm:^7.6.1"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: ^18.2.0
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-allergies-app@workspace:packages/esm-patient-allergies-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-allergies-app@workspace:packages/esm-patient-allergies-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: ^18.2.0
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-attachments-app@workspace:packages/esm-patient-attachments-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-attachments-app@workspace:packages/esm-patient-attachments-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    react-grid-gallery: "npm:^0.5.6"
+    react-html5-camera-photo: "npm:^1.5.11"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: ^18.2.0
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-banner-app@workspace:packages/esm-patient-banner-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-banner-app@workspace:packages/esm-patient-banner-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-conditions-app@workspace:packages/esm-patient-conditions-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-conditions-app@workspace:packages/esm-patient-conditions-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-flags-app@workspace:packages/esm-patient-flags-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-flags-app@workspace:packages/esm-patient-flags-app"
+  dependencies:
+    "@carbon/react": "npm:^1.33.1"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-forms-app@workspace:packages/esm-patient-forms-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-forms-app@workspace:packages/esm-patient-forms-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    fuzzy: "npm:^0.1.3"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-immunizations-app@workspace:packages/esm-patient-immunizations-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-immunizations-app@workspace:packages/esm-patient-immunizations-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@hookform/resolvers": "npm:^3.3.1"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    react-hook-form: "npm:^7.46.2"
+    webpack: "npm:^5.88.2"
+    zod: "npm:^3.22.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-lists-app@workspace:packages/esm-patient-lists-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-lists-app@workspace:packages/esm-patient-lists-app"
+  dependencies:
+    "@carbon/react": "npm:^1.33.1"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-medications-app@workspace:packages/esm-patient-medications-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-medications-app@workspace:packages/esm-patient-medications-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-notes-app@workspace:packages/esm-patient-notes-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-notes-app@workspace:packages/esm-patient-notes-app"
+  dependencies:
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-orders-app@workspace:packages/esm-patient-orders-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-orders-app@workspace:packages/esm-patient-orders-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-programs-app@workspace:packages/esm-patient-programs-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-programs-app@workspace:packages/esm-patient-programs-app"
+  dependencies:
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@kenyaemr/esm-patient-vitals-app@workspace:packages/esm-patient-vitals-app":
+  version: 0.0.0-use.local
+  resolution: "@kenyaemr/esm-patient-vitals-app@workspace:packages/esm-patient-vitals-app"
+  dependencies:
+    "@carbon/charts-react": "npm:^1.5.2"
+    "@carbon/react": "npm:^1.12.0"
+    "@openmrs/esm-patient-common-lib": "workspace:*"
+    d3: "npm:^7.6.1"
+    lodash-es: "npm:^4.17.21"
+    webpack: "npm:^5.88.2"
+  peerDependencies:
+    "@openmrs/esm-framework": 5.x
+    "@openmrs/esm-patient-common-lib": 8.x
+    dayjs: 1.x
+    react: 18.x
+    react-i18next: 11.x
+    react-router-dom: 6.x
+    rxjs: 6.x
+    swr: 2.x
+  languageName: unknown
+  linkType: soft
+
 "@leichtgewicht/ip-codec@npm:^2.0.1":
   version: 2.0.4
   resolution: "@leichtgewicht/ip-codec@npm:2.0.4"
@@ -4181,96 +4581,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openmrs/esm-form-engine-app@workspace:packages/esm-form-engine-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-form-engine-app@workspace:packages/esm-form-engine-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    "@openmrs/openmrs-form-engine-lib": "npm:next"
-    lodash-es: "npm:^4.17.21"
-    react-error-boundary: "npm:^4.0.13"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-form-entry-app@workspace:packages/esm-form-entry-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-form-entry-app@workspace:packages/esm-form-entry-app"
-  dependencies:
-    "@angular-devkit/build-angular": "npm:^16.2.11"
-    "@angular-eslint/builder": "npm:^16.3.1"
-    "@angular-eslint/eslint-plugin": "npm:^16.3.1"
-    "@angular-eslint/eslint-plugin-template": "npm:^16.3.1"
-    "@angular-eslint/schematics": "npm:^16.3.1"
-    "@angular-eslint/template-parser": "npm:^16.3.1"
-    "@angular-extensions/elements": "npm:^16.0.0"
-    "@angular/animations": "npm:^16.2.12"
-    "@angular/cdk": "npm:^16.2.12"
-    "@angular/cli": "npm:^16.2.11"
-    "@angular/common": "npm:^16.2.12"
-    "@angular/compiler": "npm:^16.2.12"
-    "@angular/compiler-cli": "npm:^16.2.12"
-    "@angular/core": "npm:^16.2.12"
-    "@angular/forms": "npm:^16.2.12"
-    "@angular/language-service": "npm:^16.2.12"
-    "@angular/localize": "npm:^16.2.12"
-    "@angular/platform-browser": "npm:^16.2.12"
-    "@angular/platform-browser-dynamic": "npm:^16.2.12"
-    "@angular/router": "npm:^16.2.12"
-    "@carbon/styles": "npm:~1.14.0"
-    "@ng-select/ng-select": "npm:^11.2.0"
-    "@ngx-translate/core": "npm:^15.0.0"
-    "@openmrs/esm-framework": "npm:next"
-    "@openmrs/ngx-file-uploader": "npm:next"
-    "@openmrs/ngx-formentry": "npm:next"
-    "@types/jasmine": "npm:~3.6.11"
-    "@types/jasminewd2": "npm:~2.0.3"
-    "@types/webpack-env": "npm:^1.18.2"
-    "@typescript-eslint/eslint-plugin": "npm:5.48.2"
-    "@typescript-eslint/parser": "npm:5.48.2"
-    codelyzer: "npm:^6.0.2"
-    copy-webpack-plugin: "npm:^11.0.0"
-    eslint: "npm:^8.33.0"
-    jasmine-core: "npm:~5.1.1"
-    jasmine-spec-reporter: "npm:~7.0.0"
-    jspdf: "npm:^2.5.1"
-    karma: "npm:~6.4.2"
-    karma-chrome-launcher: "npm:~3.2.0"
-    karma-coverage-istanbul-reporter: "npm:~3.0.3"
-    karma-jasmine: "npm:~5.1.0"
-    karma-jasmine-html-reporter: "npm:^2.1.0"
-    moment: "npm:^2.29.4"
-    ngx-bootstrap: "npm:^11.0.1"
-    ngx-build-plus: "npm:^16.0.0"
-    ngx-webcam: "npm:^0.4.1"
-    openmrs: "npm:next"
-    protractor: "npm:~7.0.0"
-    reflect-metadata: "npm:^0.1.13"
-    rxjs: "npm:^7.8.0"
-    single-spa-angular: "npm:^9.0.1"
-    slick-carousel: "npm:^1.8.1"
-    style-loader: "npm:2.x"
-    systemjs-webpack-interop: "npm:^2.3.7"
-    tree-model: "npm:^1.0.7"
-    tslib: "npm:^2.4.1"
-    uuid: "npm:^8.3.2"
-    webpack: "npm:~5.89.0"
-    zone.js: "npm:~0.13.3"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    single-spa: 6.x
-  languageName: unknown
-  linkType: soft
-
 "@openmrs/esm-framework@npm:5.6.1-pre.1955, @openmrs/esm-framework@npm:next":
   version: 5.6.1-pre.1955
   resolution: "@openmrs/esm-framework@npm:5.6.1-pre.1955"
@@ -4304,28 +4614,6 @@ __metadata:
   checksum: 10/5313f9421c16099e0fa8d4b5031b5278c4cb2e0b43ad89dd57aa25fdd64402a72a6d9938fb3ba665ca3d8079213bac98a93553de9e80f198940d26cb6d94b745
   languageName: node
   linkType: hard
-
-"@openmrs/esm-generic-patient-widgets-app@workspace:packages/esm-generic-patient-widgets-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-generic-patient-widgets-app@workspace:packages/esm-generic-patient-widgets-app"
-  dependencies:
-    "@carbon/charts-react": "npm:^1.5.2"
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    d3: "npm:^7.6.1"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: ^18.2.0
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
 
 "@openmrs/esm-globals@npm:5.6.1-pre.1955":
   version: 5.6.1-pre.1955
@@ -4365,68 +4653,6 @@ __metadata:
   checksum: 10/8df28ae0b9fff9345d0966bac5db489e906db729fce42df411181dd847a20ac4fb73cd3f67dedf5672e388585fa23d9c9d00283c899b3c089858a5acda3394e2
   languageName: node
   linkType: hard
-
-"@openmrs/esm-patient-allergies-app@workspace:packages/esm-patient-allergies-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-allergies-app@workspace:packages/esm-patient-allergies-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: ^18.2.0
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-attachments-app@workspace:packages/esm-patient-attachments-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-attachments-app@workspace:packages/esm-patient-attachments-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    react-grid-gallery: "npm:^0.5.6"
-    react-html5-camera-photo: "npm:^1.5.11"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: ^18.2.0
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-banner-app@workspace:packages/esm-patient-banner-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-banner-app@workspace:packages/esm-patient-banner-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
 
 "@openmrs/esm-patient-chart-app@workspace:packages/esm-patient-chart-app":
   version: 0.0.0-use.local
@@ -4524,232 +4750,6 @@ __metadata:
     "@openmrs/esm-framework": 5.x
     react: 18.x
     single-spa: 6.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-conditions-app@workspace:packages/esm-patient-conditions-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-conditions-app@workspace:packages/esm-patient-conditions-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-flags-app@workspace:packages/esm-patient-flags-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-flags-app@workspace:packages/esm-patient-flags-app"
-  dependencies:
-    "@carbon/react": "npm:^1.33.1"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-forms-app@workspace:packages/esm-patient-forms-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-forms-app@workspace:packages/esm-patient-forms-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    fuzzy: "npm:^0.1.3"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-immunizations-app@workspace:packages/esm-patient-immunizations-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-immunizations-app@workspace:packages/esm-patient-immunizations-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@hookform/resolvers": "npm:^3.3.1"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    react-hook-form: "npm:^7.46.2"
-    webpack: "npm:^5.88.2"
-    zod: "npm:^3.22.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-labs-app@workspace:packages/esm-patient-labs-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-labs-app@workspace:packages/esm-patient-labs-app"
-  dependencies:
-    "@carbon/charts": "npm:^1.5.2"
-    "@carbon/charts-react": "npm:^1.5.2"
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    d3: "npm:^7.6.1"
-    fuzzy: "npm:^0.1.3"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-lists-app@workspace:packages/esm-patient-lists-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-lists-app@workspace:packages/esm-patient-lists-app"
-  dependencies:
-    "@carbon/react": "npm:^1.33.1"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-medications-app@workspace:packages/esm-patient-medications-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-medications-app@workspace:packages/esm-patient-medications-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-notes-app@workspace:packages/esm-patient-notes-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-notes-app@workspace:packages/esm-patient-notes-app"
-  dependencies:
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-orders-app@workspace:packages/esm-patient-orders-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-orders-app@workspace:packages/esm-patient-orders-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-programs-app@workspace:packages/esm-patient-programs-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-programs-app@workspace:packages/esm-patient-programs-app"
-  dependencies:
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
-  languageName: unknown
-  linkType: soft
-
-"@openmrs/esm-patient-vitals-app@workspace:packages/esm-patient-vitals-app":
-  version: 0.0.0-use.local
-  resolution: "@openmrs/esm-patient-vitals-app@workspace:packages/esm-patient-vitals-app"
-  dependencies:
-    "@carbon/charts-react": "npm:^1.5.2"
-    "@carbon/react": "npm:^1.12.0"
-    "@openmrs/esm-patient-common-lib": "workspace:*"
-    d3: "npm:^7.6.1"
-    lodash-es: "npm:^4.17.21"
-    webpack: "npm:^5.88.2"
-  peerDependencies:
-    "@openmrs/esm-framework": 5.x
-    "@openmrs/esm-patient-common-lib": 8.x
-    dayjs: 1.x
-    react: 18.x
-    react-i18next: 11.x
-    react-router-dom: 6.x
-    rxjs: 6.x
-    swr: 2.x
   languageName: unknown
   linkType: soft
 

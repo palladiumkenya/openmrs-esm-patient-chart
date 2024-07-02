@@ -5,7 +5,7 @@ import { dashboardMeta } from './dashboard.meta';
 import conditionsOverviewComponent from './conditions/conditions-overview.component';
 import conditionsDetailedSummaryComponent from './conditions/conditions-detailed-summary.component';
 
-const moduleName = '@openmrs/esm-patient-conditions-app';
+const moduleName = '@kenyaemr/esm-patient-conditions-app';
 
 const options = {
   featureName: 'patient-conditions',

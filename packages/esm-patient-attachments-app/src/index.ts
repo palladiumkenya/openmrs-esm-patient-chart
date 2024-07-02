@@ -6,7 +6,7 @@ import attachmentsOverviewComponent from './attachments/attachments-overview.com
 
 export const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
 
-const moduleName = '@openmrs/esm-patient-attachments-app';
+const moduleName = '@kenyaemr/esm-patient-attachments-app';
 
 export function startupApp() {
   defineConfigSchema(moduleName, attachmentsConfigSchema);
